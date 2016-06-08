@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>855</width>
+    <height>715</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Beta Test</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QTextEdit" name="test_status">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>801</width>
+      <height>161</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testSRAM">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>220</y>
+      <width>170</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>SRAM</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testEEPROM">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>300</y>
+      <width>170</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>EEPROM</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testGPI_GPO">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>380</y>
+      <width>170</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>GPI/GPO</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testPIC">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>460</y>
+      <width>170</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PIC</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testCCTalk">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>540</y>
+      <width>170</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ccTalk</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testSPI">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>220</y>
+      <width>170</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>SPI</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testTimer">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>300</y>
+      <width>170</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>16-bit Timer</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testSAS">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>380</y>
+      <width>170</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SAS</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testRNG">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>460</y>
+      <width>170</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RNG</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="config_groupBox">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>200</y>
+      <width>341</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Configuration</string>
+    </property>
+    <widget class="QCheckBox" name="sram_checkBox">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>40</y>
+       <width>75</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>SRAM</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="eeprom_checkBox">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>80</y>
+       <width>101</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>EEPROM</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="gpi_gpo_checkBox">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>120</y>
+       <width>91</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>GPI/GPO</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="pic_checkBox">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>160</y>
+       <width>75</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>PIC</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="ccTalk_checkBox">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>200</y>
+       <width>75</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>ccTalk</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="spi_checkBox">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>40</y>
+       <width>75</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>SPI</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="timer_checkBox">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>80</y>
+       <width>121</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>16-bit Timer</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="sas_checkBox">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>120</y>
+       <width>75</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>SAS</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="rng_checkBox">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>160</y>
+       <width>75</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>RNG</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="test_btn">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>520</y>
+      <width>291</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI Symbol</family>
+      <pointsize>24</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Test All</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>855</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

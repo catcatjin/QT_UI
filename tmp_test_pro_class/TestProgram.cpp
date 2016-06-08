@@ -1,9 +1,9 @@
-#include "testprogram.h"
-
+// TestProgram.cpp : ©w¸q¥D±±¥xÀ³¥Îµ{¦¡ªº¶i¤JÂI¡C
+//
 #include <QLibrary>
-#include <QDebug>
 #include <signal.h>
 
+#include "Platform.h"
 
 #include "SixteenBitTimerTest.h"
 #include "RandomGeneratorTest.h"
@@ -16,7 +16,6 @@
 #include "PICIntrusionTest.h"
 #include "SPITest.h"
 
-#include "test_class1.h"
 #include <iostream>
 
 #ifdef WINDOWS
@@ -27,129 +26,37 @@
 #endif
 
 
+
+typedef enum
+{
+    TEST,
+    BACK,
+    STOP
+} SELECT_ACTION;
+
+
 int nFunctionSelect = 0;
 TEST_FLOW eTest_flow = NONE;
 
-//SELECT_ACTION TestSelectionMenu(string &info, TEST_FLOW &test_flow);
-//SELECT_ACTION SingleFunctionMenu();
-//SELECT_ACTION MultiFunctionMenu();
+SELECT_ACTION TestSelectionMenu(string &info, TEST_FLOW &test_flow);
+SELECT_ACTION SingleFunctionMenu();
+SELECT_ACTION MultiFunctionMenu();
 void workFunctionDiagnostic(MODEL_TYPE);
 
 bool g_bDetailInfo  = false;
 bool g_bStepPause	= false;
-
-//MODEL_TYPE eModel = UNKNOWN_MODEL;
-
+MODEL_TYPE eModel = UNKNOWN_MODEL;
 
 
-TestProgram::TestProgram()
+int test(int argc, char* argv[])
 {
-    eModel = UNKNOWN_MODEL;
-}
-
-TestProgram::~TestProgram()
-{
-
-}
-
-void TestProgram::GetDeviceVerson()
-{
-
     string sInfo;	// show total version info
     char sAPIVer[128], sFPGADriverVer[128], sSMBusDriverVer[128], temp[64];
     int type;
     BYTE PICVer;
     FPGA_INFO fpgaInfo;
     SELECT_ACTION select_action;
-    QString qStr;
-    // initial part
 
-    // 1. open fpga
-    FPGA_API_STATUS dwStatus = (FPGA_API_STATUS) FpgaPic_Init();
-
-    if(dwStatus != FD_SUCCESS)
-    {
-        //Error("main", "FpgaPic_Init", dwStatus);
-        qStr.sprintf("*** FpgaPic_Init fail with error code 0x%x",dwStatus);
-        emit updateText(qStr);
-        goto End;
-    }
-
-    // 2. get version
-
-    FD_GetFPGAVer(&fpgaInfo);
-
-    type = fpgaInfo.hw_id & 0x0F;
-
-    sprintf(temp, "Model : %s\n------------------------------\n",type < MAX_MODEL ? sModelName[type + 1].c_str() : sModelName[0].c_str());
-
-    eModel = type < MAX_MODEL ? (MODEL_TYPE)type : UNKNOWN_MODEL;
-    emit updateText((QString) temp);
-    //sInfo.append(temp);
-
-    FD_GetAPIVersion(sAPIVer);
-    sInfo += sAPIVer;
-    sInfo += '\n';
-
-    sprintf(temp, "FPGA version %d.%d.%d", (int)(fpgaInfo.version >>16) & 0xFF,
-            (int)(fpgaInfo.version >>8) & 0xFF, (int)fpgaInfo.version & 0xFF);
-
-    //sInfo.append(temp);
-    emit updateText((QString) temp);
-    if(fpgaInfo.type == 0)
-        //sInfo.append(" standard\n");
-        emit updateText(" standard\n");
-    else
-    {
-        sprintf(temp, " customize %d\n", fpgaInfo.type);
-        //sInfo.append(temp);
-        emit updateText((QString) temp);
-    }
-
-    FD_GetDriverVersion(sFPGADriverVer);
-    sInfo += sFPGADriverVer;
-    sInfo += '\n';
-
-    FD_PIC_KernelVersion(sSMBusDriverVer);
-    sInfo += sSMBusDriverVer;
-    sInfo += '\n';
-
-    PIC_GetVersion(&PICVer);
-
-    sprintf(temp, "PIC version %d\n", PICVer);
-    emit updateText((QString) temp);
-
-End:
-
-    // 5. end and close
-    dwStatus = (FPGA_API_STATUS) FpgaPic_Close();
-
-    if(dwStatus != FD_SUCCESS)
-    {
-        //printf("\nClose FPGA fail\n");
-         emit updateText("\nClose FPGA fail\n");
-    }
-    else
-    {
-        emit updateText("close \n");
-    }
-
-}
-
-
-
-int TestProgram::TestManager(int FunctionSelect)
-{
-    /*
-    string sInfo;	// show total version info
-    char sAPIVer[128], sFPGADriverVer[128], sSMBusDriverVer[128], temp[64];
-    int type;
-    BYTE PICVer;
-    FPGA_INFO fpgaInfo;
-    SELECT_ACTION select_action;
-    QString qStr;
-    */
-/*
 #ifdef WINDOWS
     // resize console windows
     HWND console = GetConsoleWindow();
@@ -163,8 +70,7 @@ int TestProgram::TestManager(int FunctionSelect)
     signal(SIGINT, SIG_IGN);
     signal(SIGBREAK, SIG_IGN);
 #endif
-    */
-/*
+
     // initial part
 
     // 1. open fpga
@@ -172,29 +78,28 @@ int TestProgram::TestManager(int FunctionSelect)
 
     if(dwStatus != FD_SUCCESS)
     {
-        //Error("main", "FpgaPic_Init", dwStatus);
-        qStr.sprintf("*** FpgaPic_Init fail with error code 0x%x",dwStatus);
-        emit updateText(qStr);
+        Error("main", "FpgaPic_Init", dwStatus);
         goto End;
     }
 
     // 2. get version
-    //#pragma region get version
+    #pragma region get version
 
-    //sInfo.assign(TEST_NAME);
-    //sInfo.append("\n=========================================================\n");
-    //sInfo.append("Detail info\n");
-    //sInfo.append("------------------------------\n");
+    sInfo.assign(TEST_NAME);
+    sInfo.append("\n=========================================================\n");
+    sInfo.append("Detail info\n");
+    sInfo.append("------------------------------\n");
 
     FD_GetFPGAVer(&fpgaInfo);
 
     type = fpgaInfo.hw_id & 0x0F;
 
-    sprintf(temp, "Model : %s\n------------------------------\n",type < MAX_MODEL ? sModelName[type + 1].c_str() : sModelName[0].c_str());
+    sprintf(temp, "Model : %s\n------------------------------\n",
+            type < MAX_MODEL ? sModelName[type + 1].c_str() : sModelName[0].c_str());
 
     eModel = type < MAX_MODEL ? (MODEL_TYPE)type : UNKNOWN_MODEL;
-    emit updateText((QString) temp);
-    //sInfo.append(temp);
+
+    sInfo.append(temp);
 
     FD_GetAPIVersion(sAPIVer);
     sInfo += sAPIVer;
@@ -228,17 +133,15 @@ int TestProgram::TestManager(int FunctionSelect)
 
     sInfo.append("------------------------------");
 
-    //#pragma endregion
-*/
-    //do
+    #pragma endregion
+
+    do
     {
         // 3. choice test operation selection
-        /*
         #pragma region show menu of function selection
 
         select_action = TEST;
-        //select_action = TestSelectionMenu(sInfo, eTest_flow);
-
+        select_action = TestSelectionMenu(sInfo, eTest_flow);
 
         if(eTest_flow == NONE)
         {
@@ -282,44 +185,40 @@ int TestProgram::TestManager(int FunctionSelect)
         }
 
         #pragma endregion
-        */
-        nFunctionSelect = FunctionSelect;
+
         // 4. do test
-        /*
 #ifdef WINDOWS
         // disable close button, all testing finish will close window
         RemoveMenu(GetSystemMenu(console,FALSE), SC_CLOSE, MF_GRAYED);
         RemoveMenu(GetSystemMenu(console,FALSE), SC_MAXIMIZE, MF_GRAYED);
         DrawMenuBar(console);
 #endif
-        */
 
-        workFunctionDiagnostic();
+        workFunctionDiagnostic(eModel);
 
     }
-    //while(1);
-/*
+    while(1);
+
 End:
 
     // 5. end and close
-    FPGA_API_STATUS dwStatus = (FPGA_API_STATUS) FpgaPic_Close();
+    dwStatus = (FPGA_API_STATUS) FpgaPic_Close();
 
     if(dwStatus != FD_SUCCESS)
     {
-        //printf("\nClose FPGA fail\n");
-         emit updateText("\nClose FPGA fail\n");
+        printf("\nClose FPGA fail\n");
     }
     else
     {
-        emit updateText("open FPGA success");
+        printf("\n");
     }
-*/
-    //SystemPause();
+
+    SystemPause();
 
     return 0;
 }
 
-SELECT_ACTION TestProgram::TestSelectionMenu(string &info, TEST_FLOW &test_flow)
+SELECT_ACTION TestSelectionMenu(string &info, TEST_FLOW &test_flow)
 {
     int number = 0;
     int count = 10;
@@ -402,7 +301,7 @@ SELECT_ACTION TestProgram::TestSelectionMenu(string &info, TEST_FLOW &test_flow)
     return TEST;
 }
 
-SELECT_ACTION TestProgram::SingleFunctionMenu()
+SELECT_ACTION SingleFunctionMenu()
 {
     int number = 0;
     int count = 10;
@@ -464,7 +363,7 @@ SELECT_ACTION TestProgram::SingleFunctionMenu()
     return TEST;
 }
 
-void TestProgram::ShowMultiSelectionExample()
+void ShowMultiSelectionExample()
 {
     // set seed
     srand((UINT)time(NULL));
@@ -524,7 +423,7 @@ void TestProgram::ShowMultiSelectionExample()
     printf("\n    or changed to Hexadecimal value with start \"0x\"\t=> %#x\n\n", nSelectValue);
 }
 
-SELECT_ACTION TestProgram::MultiFunctionMenu()
+SELECT_ACTION MultiFunctionMenu()
 {
     int number = 0;
     char input[MAX_BIN_LEN + 1];
@@ -615,7 +514,7 @@ SELECT_ACTION TestProgram::MultiFunctionMenu()
 }
 
 
-void TestProgram::workFunctionDiagnostic()
+void workFunctionDiagnostic(MODEL_TYPE modelType)
 {
     std::string sFinalResult;
 
@@ -638,7 +537,7 @@ void TestProgram::workFunctionDiagnostic()
 
     if( TEST_BIT(nFunctionSelect,  CCTALK_TEST))
     {
-        CCTalkTest ccTalkTest(eModel);
+        CCTalkTest ccTalkTest(modelType);
         ccTalkTest.diagnostic();
 
         sFinalResult.append(ccTalkTest.getResultString());
@@ -656,15 +555,15 @@ void TestProgram::workFunctionDiagnostic()
 
     if( TEST_BIT(nFunctionSelect,  SRAM_TEST))
     {
-        SRAMTest sramTest;
-        sramTest.diagnostic();
+        //SRAMTest sramTest;
+        //sramTest.diagnostic();
 
-        sFinalResult.append(sramTest.getResultString());
+        //sFinalResult.append(sramTest.getResultString());
     }
 
     if( TEST_BIT(nFunctionSelect,  EEPROM_TEST))
     {
-        EEPROMTest eepromTest(eModel);
+        EEPROMTest eepromTest(modelType);
         eepromTest.diagnostic();
 
         sFinalResult.append(eepromTest.getResultString());
@@ -690,7 +589,7 @@ void TestProgram::workFunctionDiagnostic()
 
     if( TEST_BIT(nFunctionSelect,  RTC_INSTURSION_TEST))
     {
-        PICIntrusionTest picTest(eModel);
+        PICIntrusionTest picTest(modelType);
         picTest.diagnostic();
 
         sFinalResult.append(picTest.getResultString());
@@ -707,120 +606,5 @@ void TestProgram::workFunctionDiagnostic()
     ClearScreen();
     printf("Diagnostic Complete!\n\nResult:\n\n");
     printf("%s", sFinalResult.c_str());
-    //SystemPause();
-}
-
-
-void TestProgram::ConnectSlot(QObject *pObj, const char *pSlot)
-{
-    if (NULL == pObj || NULL == pSlot)
-    {
-        qDebug() << "param error";
-        return;
-    }
-    connect(this, SIGNAL(updateText(QString)), pObj, pSlot);
-    qDebug() << "connect signal & slot";
-}
-
-
-//
-void TestProgram::SixteenBitTimerDia()
-{
-    std::string sFinalResult;
-
-        SixteenBitTimerTest timerTest;
-        timerTest.diagnostic();
-
-        sFinalResult.append(timerTest.getResultString());
-
-}
-
-void TestProgram::RandomGeneratorDia()
-{
-    std::string sFinalResult;
-
-        RandomGeneratorTest randomTest;
-        randomTest.diagnostic();
-
-        sFinalResult.append(randomTest.getResultString());
-}
-
-void TestProgram::CCTalkDia()
-{
-    std::string sFinalResult;
-
-        CCTalkTest ccTalkTest(eModel);
-        ccTalkTest.diagnostic();
-
-        sFinalResult.append(ccTalkTest.getResultString());
-}
-
-void TestProgram::SASDia()
-{
-    std::string sFinalResult;
-
-        SASTest sasTest;
-        sasTest.diagnostic();
-
-        sFinalResult.append(sasTest.getResultString());
-}
-
-void TestProgram::SRAMDia()
-{
-    std::string sFinalResult;
-
-        SRAMTest sramTest;
-        sramTest.diagnostic();
-
-        sFinalResult.append(sramTest.getResultString());
-}
-
-void TestProgram::EEPROMDia()
-{
-    std::string sFinalResult;
-
-        EEPROMTest eepromTest(eModel);
-        eepromTest.diagnostic();
-
-        sFinalResult.append(eepromTest.getResultString());
-}
-
-void TestProgram::GPODia()
-{
-    std::string sFinalResult;
-
-        GPOTest gpoTest;
-        gpoTest.diagnostic();
-
-        sFinalResult.append(gpoTest.getResultString());
-}
-
-void TestProgram::GPIDia()
-{
-    std::string sFinalResult;
-
-        GPITest gpiTest;
-        gpiTest.diagnostic();
-
-        sFinalResult.append(gpiTest.getResultString());
-}
-
-void TestProgram::PICIntrusionDia()
-{
-    std::string sFinalResult;
-
-        PICIntrusionTest picTest(eModel);
-        picTest.diagnostic();
-
-        sFinalResult.append(picTest.getResultString());
-}
-
-void TestProgram::SPIDia()
-{
-    std::string sFinalResult;
-
-        SPITest spiTest;
-        spiTest.diagnostic();
-
-        sFinalResult.append(spiTest.getResultString());
+    SystemPause();
 }

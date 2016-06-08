@@ -1,0 +1,54 @@
+#include "cctalk_test.h"
+#include <QEventLoop>
+#include <QTimer>
+
+CCTALK_test::CCTALK_test(QObject *parent) : QObject(parent)
+{
+
+}
+
+void CCTALK_test::doTest()
+{
+    emit enableBtn(m_nBtnName, false);
+    emit updateBtn(m_nBtnName, YELLOW_XBTN);
+    emit updateText(tr("ccTalk testing:Start test now.."));
+    QEventLoop eventloop;
+    QTimer::singleShot(1, &eventloop, SLOT(quit()));
+    eventloop.exec();
+    //writeLog("[START COM1&COM3 TEST]");
+/*
+    if(openCOM1COM3())
+    {
+        emit updateBtn(UART1_BTN, RED_XBTN);
+        emit updateText(tr("COM1 testing:port open fail.."));
+        writeLog(tr("COM1 testing:port open fail.."));
+        emit enableBtn(UART1_BTN, true);
+        result = -1;
+        return;
+    }
+
+    if(COMRxTxTest())
+    {
+        result = -1;
+        ::close(fd1);
+        ::close(fd2);
+        emit updateBtn(UART1_BTN, RED_XBTN);
+        emit enableBtn(UART1_BTN, true);
+        return;
+    }
+*/
+    if (1)
+    {
+        Sleep(1000);
+        emit updateBtn(m_nBtnName, GREEN_XBTN);
+
+
+    }
+    //emit updateText(tr("COM1 testing:RX/TX Test PASS!!"));
+    //writeLog(tr("COM1 testing:RX/TX Test PASS!!"));
+
+    //::close(fd1);
+    //::close(fd2);
+
+    emit enableBtn(m_nBtnName, true);
+}
